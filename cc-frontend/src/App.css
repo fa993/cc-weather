@@ -1,0 +1,33 @@
+.weather-overlay {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 300px;
+  padding: 20px;
+  background: rgba(0, 0, 51, 0.8); /* Dark blue background with transparency */
+  border-radius: 10px;
+  color: #ffffff;
+  font-family: Arial, sans-serif;
+}
+
+.current-weather,
+.five-day-summary,
+.hourly-chart {
+  margin-bottom: 15px;
+}
+
+.current-weather h2,
+.five-day-summary h2,
+.hourly-chart h2 {
+  font-size: 1.2em;
+  margin-bottom: 10px;
+}
+
+.current-weather p,
+.five-day-summary p {
+  font-size: 1em;
+}
+
+.hourly-chart canvas {
+  width: 100% !important;
+}

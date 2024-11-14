@@ -1,0 +1,76 @@
+.weather-overlay {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 320px;
+    padding: 20px;
+    background: rgba(0, 0, 51, 0.8); /* Dark blue background with transparency */
+    border-radius: 10px;
+    color: #ffffff;
+    font-family: Arial, sans-serif;
+}
+
+.current-weather,
+.five-day-summary,
+.hourly-chart {
+    margin-bottom: 15px;
+}
+
+.current-weather h2,
+.five-day-summary h2,
+.hourly-chart h2 {
+    font-size: 1.2em;
+    margin-bottom: 10px;
+}
+
+.current-weather p {
+    font-size: 1em;
+}
+
+/* Styling for the 5-day summary */
+.five-day-summary .day-boxes {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.day-box {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 10px;
+    border-radius: 8px;
+    text-align: center;
+    flex: 1;
+}
+
+.day-name {
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #ffd700;
+}
+
+.day-box p {
+    margin: 5px 0;
+    font-size: 0.9em;
+}
+
+.hourly-chart canvas {
+    width: 100% !important;
+}
+
+/* Close button styles */
+.close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: transparent;
+    border: none;
+    color: #ffffff;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close-button:hover {
+    color: #ff4d4d; /* Changes color on hover */
+}
