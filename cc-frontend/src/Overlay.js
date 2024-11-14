@@ -61,6 +61,7 @@ const Overlay = ({ sensor, onClose }) => {
 	}, [sensor]);
 
 	const [eightHoursTemp, seteightHoursTemp] = useState([]);
+	const [updatedAt, setupdatedAt] = useState(undefined);
 
 	useEffect(() => {
 		async function doStuff() {
@@ -71,14 +72,15 @@ const Overlay = ({ sensor, onClose }) => {
 				`${API}/api/entries?sensorId=${
 					sensor.id
 				}&length=500&entry_type=temperature&from=${new Date(
-					new Date().getTime() - 8 * 60 * 60 * 1000
+					new Date().getTime() - 2 * 60 * 60 * 1000
 				).toISOString()}`
 			);
 			if (response.ok) {
 				const dat = await response.json();
+				setcurT(dat?.[0]?.entry_value);
+				setupdatedAt(dat?.[0]?.timestamp);
+				dat.sort((a, b) => a.timestamp - b.timestamp);
 				seteightHoursTemp(dat);
-				console.log(dat.length);
-				setcurT(dat?.[0].entry_value);
 			}
 		}
 		doStuff();
@@ -95,16 +97,42 @@ const Overlay = ({ sensor, onClose }) => {
 				`${API}/api/entries?sensorId=${
 					sensor.id
 				}&length=500&entry_type=humidity&from=${new Date(
-					new Date().getTime() - 8 * 60 * 60 * 1000
+					new Date().getTime() - 2 * 60 * 60 * 1000
 				).toISOString()}`
 			);
 			if (response.ok) {
 				const dat = await response.json();
+				setcurH(dat?.[0]?.entry_value);
+				dat.sort((a, b) => a.timestamp - b.timestamp);
 				seteightHoursHum(dat);
-				setcurH(dat?.[0].entry_value);
 			}
 		}
 		doStuff();
+	}, [sensor]);
+
+	useEffect(() => {
+		const handle = setInterval(async () => {
+			if (!sensor?.id) {
+				return;
+			}
+			const response = await fetch(
+				`${API}/api/entries?sensorId=${sensor.id}&length=1&entry_type=humidity`
+			);
+			if (response.ok) {
+				const dat = await response.json();
+				setcurH(dat?.[0]?.entry_value);
+				setupdatedAt(dat?.[0]?.timestamp);
+			}
+			const response2 = await fetch(
+				`${API}/api/entries?sensorId=${sensor.id}&length=1&entry_type=temperature`
+			);
+			if (response2.ok) {
+				const dat = await response2.json();
+				setcurT(dat?.[0]?.entry_value);
+				setupdatedAt(dat?.[0]?.timestamp);
+			}
+		}, 10000);
+		return () => clearInterval(handle);
 	}, [sensor]);
 
 	const chartData = {
@@ -124,6 +152,7 @@ const Overlay = ({ sensor, onClose }) => {
 				backgroundColor: 'rgba(255, 167, 38, 0.2)',
 				fill: true,
 				yAxisID: 'y',
+				tension: 0.4,
 			},
 			{
 				label: 'Humidity (%)',
@@ -132,13 +161,16 @@ const Overlay = ({ sensor, onClose }) => {
 				backgroundColor: 'rgba(102, 187, 106, 0.2)',
 				fill: true,
 				yAxisID: 'y1',
+				tension: 0.4,
 			},
 		],
 	};
 
 	const chartOptions = {
+		stacked: false,
 		responsive: true,
 		interaction: {
+			mode: 'index',
 			intersect: false,
 		},
 		scales: {
@@ -146,6 +178,7 @@ const Overlay = ({ sensor, onClose }) => {
 				type: 'linear',
 				position: 'left',
 				display: true,
+				// beginAtZero: true,
 			},
 			y1: {
 				type: 'linear',
@@ -154,6 +187,7 @@ const Overlay = ({ sensor, onClose }) => {
 				grid: {
 					drawOnChartArea: false, // only want the grid lines for one axis to show up
 				},
+				// beginAtZero: true,
 			},
 		},
 	};
@@ -169,15 +203,16 @@ const Overlay = ({ sensor, onClose }) => {
 				<p>Humidity: {curH}%</p>
 				<p>
 					As of{' '}
-					{millisecondsToStr(
-						new Date().getTime() -
-							new Date(eightHoursTemp?.[0]?.timestamp).getTime()
-					)}{' '}
+					{updatedAt
+						? millisecondsToStr(
+								new Date().getTime() - new Date(updatedAt).getTime()
+						  )
+						: 'unknown time'}{' '}
 					ago
 				</p>
 			</div>
 			<div className='five-day-summary'>
-				<h2>6 days History</h2>
+				<h2>Last 6 days history</h2>
 				<div className='day-boxes'>
 					{daily
 						.map((day, index) => (
@@ -198,7 +233,7 @@ const Overlay = ({ sensor, onClose }) => {
 				</div>
 			</div>
 			<div className='hourly-chart'>
-				<h2>Last 8 Hours</h2>
+				<h2>Last 2 Hours</h2>
 				<Line data={chartData} options={chartOptions} />
 			</div>
 		</div>

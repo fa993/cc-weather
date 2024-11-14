@@ -88,9 +88,6 @@ function App() {
 				labelSize={(_) => 1}
 				labelDotRadius={(_) => 1}
 				onLabelClick={(lab, ev, cords) => {
-					console.log(lab);
-					console.log(ev);
-					console.log(cords);
 					setselectedLabel(lab);
 					globeEl.current.controls().autoRotate = false;
 					globeEl.current.pointOfView(
