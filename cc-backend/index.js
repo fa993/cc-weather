@@ -69,7 +69,7 @@ app.get('/api/sensors', async (req, res) => {
 
 // Route to get a range of entries with filters for offset, length, timestamp range, and entry_type
 app.get('/api/entries', async (req, res) => {
-	const { offset = 0, length = 10, from, to, entry_type } = req.query;
+	const { offset = 0, length = 10, from, to, entry_type, sensorId } = req.query;
 
 	// Validate offset and length
 	const parsedOffset = parseInt(offset, 10);
@@ -81,9 +81,16 @@ app.get('/api/entries', async (req, res) => {
 			.json({ error: 'Offset and length must be valid numbers.' });
 	}
 
+	if (!sensorId) {
+		res.status(400).json({ error: 'sensorId is compulsory' });
+	}
+
 	// Build the query with optional from, to, and entry_type filters
 	let query = 'SELECT * FROM entry WHERE 1=1';
 	const params = [];
+
+	query += ' AND sensor_id = ?';
+	params.push(sensorId);
 
 	if (from) {
 		query += ' AND timestamp >= ?';
