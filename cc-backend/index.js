@@ -8,6 +8,8 @@ const app = express();
 app.use(bodyParser.json());
 app.use(cors());
 
+app.use(express.static('public'));
+
 // Database connection pool
 const pool = mariadb.createPool({
 	host: process.env.DB_HOST,

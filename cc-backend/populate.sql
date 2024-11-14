@@ -1,6 +1,6 @@
 INSERT INTO sensor (id, lat, lon) VALUES
-    (UUID(), 12.972651, 79.164246),    -- Sensor 1
-    (UUID(), 19.218331, 72.978090);
+    ('72fe4140-a1ba-11ef-b0e1-0242ac110002', 12.972651, 79.164246),    -- Sensor 1
+    ('72fe4422-a1ba-11ef-b0e1-0242ac110002', 19.218331, 72.978090);
 
 -- Insert temperature and humidity entries into the entry table every 5 minutes from the last week to now
 
