@@ -43,7 +43,7 @@ app.post('/api/entry', async (req, res) => {
 
 		res.status(201).json({
 			message: 'Entry added successfully',
-			entryId: result.insertId,
+			entryId: Number(result.insertId),
 		});
 	} catch (err) {
 		console.error('Error adding entry:', err);
