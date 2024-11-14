@@ -171,7 +171,7 @@ const Overlay = ({ sensor, onClose }) => {
 					As of{' '}
 					{millisecondsToStr(
 						new Date().getTime() -
-							new Date(eightHoursTemp?.[0].timestamp).getTime()
+							new Date(eightHoursTemp?.[0]?.timestamp).getTime()
 					)}{' '}
 					ago
 				</p>
